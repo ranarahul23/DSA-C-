@@ -1,0 +1,66 @@
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+
+using namespace std;
+/* Link list Node */
+struct Node {
+    int data;
+    Node *next;
+    Node *arb;
+
+    Node(int x) {
+        data = x;
+        next = NULL;
+        arb = NULL;
+    }
+};
+
+
+
+class Solution
+{
+    private:
+    void insertattail(Node* &head,Node* &tail,int d){
+        Node* newnode=new Node(d);
+        if(head==NULL){
+            head=newnode;
+            tail=newnode;
+            return;
+            
+        }
+        else{
+            tail->next=newnode;
+            tail=newnode;
+        }
+        
+    }
+    public:
+    Node *copyList(Node *head)
+    {
+        Node* clonehead=NULL;
+        Node* clonetail=NULL;
+        Node* temp=head;
+        while(temp!=NULL){
+            insertattail(clonehead,clonetail,temp->data);
+            temp=temp->next;
+        }
+        unordered_map<Node*,Node*> oldtonew;
+        Node* og=head;
+        Node* copy=clonehead;
+        while(og!=NULL && copy!=NULL){
+            oldtonew[og]=copy;
+            og=og->next;
+            copy=copy->next;
+        }
+        og=head;
+        copy=clonehead;
+        while(og!=NULL){
+            copy->arb=oldtonew[og->arb];
+            og=og->next;
+            copy=copy->next;
+        }
+        return clonehead;
+    }
+
+};
+
