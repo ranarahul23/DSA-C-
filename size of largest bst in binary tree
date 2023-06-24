@@ -1,0 +1,35 @@
+class info{
+    public:
+    int max;
+    int mini;
+    bool isbst;
+    int size;
+};
+info solve(TreeNode<int>* root,int &ans){
+    if(root==NULL){
+        return {INT_MIN,INT_MAX,true,0};
+
+    }
+    info left=solve(root->left,ans);
+    info right=solve(root->right,ans);
+    info currnode;
+    currnode.size=left.size+right.size+1;
+    currnode.max=max(root->data,right.max);
+    currnode.mini=min(root->data,left.mini);
+    if(left.isbst==true&&right.isbst==true&&(root->data<right.mini&&root->data>left.max)){
+        currnode.isbst=true;
+    }
+    else{
+        currnode.isbst=false;
+    }
+    if(currnode.isbst){
+        ans=max(ans,currnode.size);
+    }
+    return currnode;
+}
+int largestBST(TreeNode<int>* root) 
+{
+    int maxsize=0;
+    info temp=solve(root,maxsize);
+    return maxsize;
+}
