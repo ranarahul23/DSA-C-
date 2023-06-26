@@ -1,0 +1,40 @@
+#include<queue>
+class compare{
+    public:
+    bool operator()(Node<int>* a,Node<int>* b){
+        return a->data > b->data;
+    }
+};
+Node<int>* mergeKLists(vector<Node<int>*> &listArray)
+{
+    priority_queue<Node<int>*,vector<Node<int>*>,compare> minheap;
+    int k=listArray.size();
+    if(k==0){
+        return NULL;
+    }
+    for(int i=0;i<k;i++){
+        if(listArray[i]!=NULL){
+            minheap.push(listArray[i]);
+        }
+    }
+    Node<int>* head=NULL;
+    Node<int>* tail=NULL;
+    while(minheap.size()>0){
+        Node<int>* Top=minheap.top();
+        minheap.pop();
+        if(Top->next!=NULL){
+            minheap.push(Top->next);
+
+        }
+        if(head==NULL){
+            head=Top;
+            tail=Top;
+        }
+        else{
+            tail->next=Top;
+            tail=Top;
+        }
+
+    }
+    return head;
+}
