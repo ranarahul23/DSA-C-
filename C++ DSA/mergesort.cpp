@@ -1,95 +1,69 @@
-#include <iostream>
-using namespace std;
+void merge(vector<int> &arr, int s, int e) {
 
+    int mid = (s+e)/2;
 
-void merge(int array[], int const left, int const mid,
-		int const right)
-{
-	auto const subArrayOne = mid - left + 1;
-	auto const subArrayTwo = right - mid;
+    int len1 = mid - s + 1;
+    int len2 = e - mid;
 
-\
-	auto *leftArray = new int[subArrayOne],
-		*rightArray = new int[subArrayTwo];
+    int *first = new int[len1];
+    int *second = new int[len2];
 
-	
-	for (auto i = 0; i < subArrayOne; i++)
-		leftArray[i] = array[left + i];
-	for (auto j = 0; j < subArrayTwo; j++)
-		rightArray[j] = array[mid + 1 + j];
+    //copy values
+    int mainArrayIndex = s;
+    for(int i=0; i<len1; i++) {
+        first[i] = arr[mainArrayIndex++];
+    }
 
-	auto indexOfSubArrayOne
-		= 0, 
-		indexOfSubArrayTwo
-		= 0; 
-	int indexOfMergedArray
-		= left; 
+    mainArrayIndex = mid+1;
+    for(int i=0; i<len2; i++) {
+        second[i] = arr[mainArrayIndex++];
+    }
 
-	while (indexOfSubArrayOne < subArrayOne
-		&& indexOfSubArrayTwo < subArrayTwo) {
-		if (leftArray[indexOfSubArrayOne]
-			<= rightArray[indexOfSubArrayTwo]) {
-			array[indexOfMergedArray]
-				= leftArray[indexOfSubArrayOne];
-			indexOfSubArrayOne++;
-		}
-		else {
-			array[indexOfMergedArray]
-				= rightArray[indexOfSubArrayTwo];
-			indexOfSubArrayTwo++;
-		}
-		indexOfMergedArray++;
-	}
-	
-	while (indexOfSubArrayOne < subArrayOne) {
-		array[indexOfMergedArray]
-			= leftArray[indexOfSubArrayOne];
-		indexOfSubArrayOne++;
-		indexOfMergedArray++;
-	}
-	
-	while (indexOfSubArrayTwo < subArrayTwo) {
-		array[indexOfMergedArray]
-			= rightArray[indexOfSubArrayTwo];
-		indexOfSubArrayTwo++;
-		indexOfMergedArray++;
-	}
-	delete[] leftArray;
-	delete[] rightArray;
+    //merge 2 sorted arrays     
+    int index1 = 0;
+    int index2 = 0;
+    mainArrayIndex = s;
+
+    while(index1 < len1 && index2 < len2) {
+        if(first[index1] < second[index2]) {
+            arr[mainArrayIndex++] = first[index1++];
+        }
+        else{
+            arr[mainArrayIndex++] = second[index2++];
+        }
+    }   
+
+    while(index1 < len1) {
+        arr[mainArrayIndex++] = first[index1++];
+    }
+
+    while(index2 < len2 ) {
+        arr[mainArrayIndex++] = second[index2++];
+    }
+
+    delete []first;
+    delete []second;
+
 }
+void solve(vector < int > & arr, int s, int e) {
 
+    //base case
+    if(s >= e) {
+        return;
+    }
+    
+    int mid = (s+e)/2;
 
-void mergeSort(int array[], int const begin, int const end)
-{
-	if (begin >= end)
-		return; 
+    //left part sort karna h 
+    solve(arr, s, mid);
+    
+    //right part sort karna h 
+    solve(arr, mid+1, e);
 
-	auto mid = begin + (end - begin) / 2;
-	mergeSort(array, begin, mid);
-	mergeSort(array, mid + 1, end);
-	merge(array, begin, mid, end);
+    //merge
+    merge(arr, s, e);
+
 }
-
-
-void printArray(int A[], int size)
-{
-	for (auto i = 0; i < size; i++)
-		cout << A[i] << " ";
+void mergeSort(vector < int > & arr, int n) {
+    solve(arr,0,n-1);
 }
-
-
-int main()
-{
-	int arr[] = { 12, 11, 13, 5, 6, 7 };
-	auto arr_size = sizeof(arr) / sizeof(arr[0]);
-
-	cout << "Given array is \n";
-	printArray(arr, arr_size);
-
-	mergeSort(arr, 0, arr_size - 1);
-
-	cout << "\nSorted array is \n";
-	printArray(arr, arr_size);
-	return 0;
-}
-
