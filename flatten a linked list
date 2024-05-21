@@ -1,0 +1,62 @@
+Node* merge(Node* first, Node*second){
+
+	if(first!=NULL && first->child == NULL){
+		first->child = second;
+		return first;
+	}
+
+	Node* curr1 = first;
+	Node* next1= first->child;
+	Node* curr2 = second;
+
+	while(next1!=NULL || curr2!= NULL ){
+		if(curr2->data >= curr1->data &&  curr2->data<=next1->data){
+			curr1->child = curr2;
+			Node* next2 = curr2->child;
+			curr2->child = next1;
+
+			curr1 = curr2;
+			// next1 = next1->child;
+			curr2 = next2;
+			
+		}
+		else{
+			curr1 = next1;
+			next1 = next1->child;
+		}
+		if(curr2==NULL){
+				return first;
+			}
+		if(next1==NULL){
+			curr1->child = curr2;
+			return first;
+		}
+	}
+	return first;
+}
+
+
+Node* flattenLinkedList(Node* head) 
+{	
+	if(head==NULL || head->next==NULL){
+		return head;
+	}
+	Node* first = head;
+	Node* second = head->next;
+
+	while(second!=NULL){
+		Node* forward = second->next;
+		if(first->data<= second->data){
+			first = merge(first, second);
+		}
+		else{
+			first = merge(second, first);
+		}
+		second = forward;
+		if(second==NULL){
+			return first;
+		}
+	}
+
+	return head;  
+}
