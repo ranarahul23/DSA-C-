@@ -1,36 +1,28 @@
-/************************************************************
-
-    Following is the linked list node structure.
-    
-    class Node 
-    {
-        public:
-        int data;
-        Node* next;
-
-        Node(int data) 
-        {
-            this->data = data;
-            this->next = NULL;
-        }
-    };
-    
-************************************************************/
-
-Node * uniqueSortedList(Node * head) {
-    if(head==NULL){
+Node *removeDuplicates(Node *head)
+{
+    if(head == NULL)
         return NULL;
-    }
-    Node* curr=head;
-    while(curr->next!=NULL){
-        if(curr->data==curr->next->data){
-            Node* nextnext=curr->next->next;
-            Node* todelete=curr->next;
-            delete(todelete);
-            curr->next=nextnext;
-        } else {
-          curr = curr->next;
+    
+    unordered_map<int , bool> visited;
+    Node* current = head;
+    Node* prev = NULL;
+    Node* temp = NULL;
+
+
+    while(current != NULL){
+        if(visited[current->data] == true){
+            temp = current;
+            prev -> next = current -> next;
+            current = current -> next;
+            delete temp;
+        }
+        else{
+            visited[current->data] = true;
+            prev = current;
+            current = current -> next;
         }
     }
+
+
     return head;
 }
